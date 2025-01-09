@@ -1,0 +1,30 @@
+pipeline {
+    agent {
+        node {
+            label 'maven' // Ensures this runs on a node labeled 'maven'
+        }
+    }
+
+    environment {
+        PATH = "/opt/apache-maven-3.9.9/bin:$PATH" // Adds Maven to the PATH
+    }
+
+    stages {
+        stage("Build") {
+            steps {
+                echo "Starting the build process..."
+                sh 'mvn --version' // Verifies Maven version and setup
+                sh 'mvn clean deploy' // Executes the Maven command
+            }
+        }
+    }
+
+    post {
+        success {
+            echo "Build completed successfully!"
+        }
+        failure {
+            echo "Build failed. Please check the logs for details."
+        }
+    }
+}
